@@ -6,9 +6,10 @@ var logger = require('morgan');
 
 const passport = require('passport');
 require('./routes/user/passport');
-const user = require('./routes/user/user');
 
+const userRouter = require('./routes/user/user');
 var indexRouter = require('./routes/index');
+var meRouter = require('./routes/user/me');
 
 var app = express();
 
@@ -19,7 +20,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/user', user);
+app.use('/user', userRouter);
+app.use('/me', passport.authenticate('jwt', {session: false}), meRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -34,7 +36,8 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  console.log(err);
+  res.send('error');
 });
 
 module.exports = app;

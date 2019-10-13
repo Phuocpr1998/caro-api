@@ -8,23 +8,24 @@ const ExtractJWT = passportJWT.ExtractJwt;
 const secret_key = '`Mb6XB=9{n9RZjh*';
 
 passport.use(new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-        secretOrKey   : secret_key
-    },
-    function (jwtPayload, cb) {
-        console.log(jwtPayload);
-        //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        return UserModel.findOne({email, password})
-            .then(user => {
-                if (user.lenght <= 0) {
-                    return cb(null, false);
-                }
+    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    secretOrKey   : secret_key
+},
+function (jwtPayload, cb) {
+    //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
+    return UserModel.findOne({email: jwtPayload.email, password: jwtPayload.password})
+        .then(user => {
+            if (user.lenght <= 0) {
+                return cb(null, false);
+            }
+            else {
                 return cb(null, user[0]);
-            })
-            .catch(err => {
-                return cb(err);
-            });
-    }
+            }
+        })
+        .catch(err => {
+            return cb(err);
+        });
+}
 ));
 
 passport.use(new LocalStrategy({
@@ -40,6 +41,6 @@ passport.use(new LocalStrategy({
                }
                return cb(null, user[0], {message: 'Logged In Successfully'});
           })
-          .catch(err => cb(err));
+          .catch(err => cb(err, false, {message: 'Something error.'}));
     }
 ));
