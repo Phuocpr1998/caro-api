@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.send("ok");
+  res.send("Caro-Api service");
 });
 
 module.exports = router;

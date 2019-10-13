@@ -3,9 +3,9 @@ var createConnection = ()=> {
     return mysql.createConnection({
         host:'remotemysql.com',
         port: '3306',
-        user:  '',
-        password: '',
-        database: ''
+        user:  '41Zg2mdH5g',
+        password: '6iYXYIMpU9',
+        database: '41Zg2mdH5g'
     });
 }
 

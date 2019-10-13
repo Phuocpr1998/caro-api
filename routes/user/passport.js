@@ -12,11 +12,14 @@ passport.use(new JWTStrategy({
         secretOrKey   : secret_key
     },
     function (jwtPayload, cb) {
-
+        console.log(jwtPayload);
         //find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-        return UserModel.findOneById(jwtPayload.id)
+        return UserModel.findOne({email, password})
             .then(user => {
-                return cb(null, user);
+                if (user.lenght <= 0) {
+                    return cb(null, false);
+                }
+                return cb(null, user[0]);
             })
             .catch(err => {
                 return cb(err);
@@ -32,10 +35,10 @@ passport.use(new LocalStrategy({
         //this one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
         return UserModel.findOne({email, password})
            .then(user => {
-               if (!user) {
+               if (!user || user.length <= 0) {
                    return cb(null, false, {message: 'Incorrect email or password.'});
                }
-               return cb(null, user, {message: 'Logged In Successfully'});
+               return cb(null, user[0], {message: 'Logged In Successfully'});
           })
           .catch(err => cb(err));
     }
