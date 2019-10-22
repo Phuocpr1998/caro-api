@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var cors = require('cors');
+
 
 const passport = require('passport');
 require('./routes/user/passport');
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({origin:true,credentials: true}));
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
