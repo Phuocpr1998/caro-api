@@ -19,6 +19,7 @@ function (jwtPayload, cb) {
                 return cb(null, false);
             }
             else {
+                delete user[0].password;
                 return cb(null, user[0]);
             }
         })
