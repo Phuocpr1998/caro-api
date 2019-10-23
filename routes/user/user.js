@@ -24,13 +24,13 @@ router.post('/register', function(req, res, next) {
         var errMessage = err.sqlMessage;
         var exists = err.code.includes("ER_DUP_ENTRY");
         if (exists) {
-            return res.send({
+            return res.status(400).send({
                 message: "Register fail.",
                 err: "User already exists."
             })
         }
 
-        return res.send({
+        return res.status(400).send({
             message: "Register fail.",
             err: errMessage
         })
