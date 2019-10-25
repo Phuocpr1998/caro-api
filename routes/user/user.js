@@ -1,5 +1,5 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UserModel = require('../../models/user.model');
@@ -7,18 +7,27 @@ const UserModel = require('../../models/user.model');
 const secret_key = '`Mb6XB=9{n9RZjh*';
 
 /* POST login. */
-router.post('/login', passport.authenticate('local', {session: false}), function (req, res, next) {
-   console.log(req.user);
-   res.json({token: jwt.sign(Object.assign({}, req.user), secret_key)});
+router.post('/login', passport.authenticate('local', { session: false }), function (req, res, next) {
+    delete req.user.password;
+    res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
 
-router.post('/register', function(req, res, next) {
+app.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/login-google/callback',
+    passport.authenticate('google', {
+        successRedirect: '/profile',
+        failureRedirect: '/'
+    })
+);
+
+router.post('/register', function (req, res, next) {
     const body = req.body;
     if (body === undefined || body === null || Object.keys(body).length === 0) {
-        return res.status(400).send({message: "Body must not empty."});
+        return res.status(400).send({ message: "Body must not empty." });
     }
+    body.loginType = 'local';
     UserModel.add(body).then((index) => {
-        return res.send({message: "Register successful."})
+        return res.send({ message: "Register successful." })
     }).catch((err) => {
         console.log(err);
         var errMessage = err.sqlMessage;
