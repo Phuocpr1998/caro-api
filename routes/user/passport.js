@@ -54,8 +54,8 @@ passport.use(new GoogleStrategy({
     callbackURL: configAuth.googleAuth.callbackURL,
 },
 function (token, refreshToken, profile, done) {
+    console.log(profile);
     process.nextTick(function () {
-        console.log(profile);
         // // tìm trong db xem có user nào đã sử dụng google id này chưa
         UserModel.findOneEmail({'email': profile.email}, function (err, user) {
             if (err)
