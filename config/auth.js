@@ -7,6 +7,6 @@ module.exports = {
     'googleAuth': {
         'clientID': '1001676497241-vn4rjm0l9cg75l4301iuflfu1avu9l44.apps.googleusercontent.com',
         'clientSecret': 'i9TWeJu1FRBvK0wHcIW9acA7',
-        'callbackURL': 'http://localhost:3000/user/login-google/callback'
+        'callbackURL': 'https://caro-api-wnc.herokuapp.com/user/login-google/callback'
     }
 };
