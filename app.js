@@ -15,12 +15,16 @@ var meRouter = require('./routes/user/me');
 
 var app = express();
 
+const secret_key = '`Mb6XB=9{n9RZjh*';
+
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
+app.use(express.session({ secret: secret_key }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
+app.use(passport.session());
 app.use(cors({origin:true,credentials: true}));
 
 app.use('/', indexRouter);
