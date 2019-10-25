@@ -17,6 +17,10 @@ router.get('/login-google/callback',
     passport.authenticate('google', {
         successRedirect: '/profile',
         failureRedirect: '/'
+    }, function onAuthenticate(req, res) {
+        console.log(req);
+        // Successful authentication, redirect home
+        res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
     })
 );
 

@@ -54,7 +54,6 @@ passport.use(new GoogleStrategy({
     callbackURL: configAuth.googleAuth.callbackURL,
 },
 function (token, refreshToken, profile, done) {
-    console.log(profile);
     process.nextTick(function () {
         // // tìm trong db xem có user nào đã sử dụng google id này chưa
         UserModel.findOneEmail({'email': profile.email}, function (err, user) {
@@ -64,7 +63,7 @@ function (token, refreshToken, profile, done) {
             if (user) {
                 return done(null, user);
             } else {
-                const newUser = {email: profile.email, loginType: 'google', googleId: profile.id};
+                const newUser = {email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'google', googleId: profile.id};
                 UserModel.add(newUser).then((index) => {
                     return done(null, newUser);
                 }).catch((err) => {

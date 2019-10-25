@@ -4,6 +4,7 @@ CREATE TABLE USERS
 	password varchar(50),
 	name varchar(50) character set utf8 not null,
 	birthday date not null,
+	photo varchar(100),
     googleId int,
     facebookId int,
     loginType varchar(10) not null,
