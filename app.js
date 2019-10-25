@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var session = require('express-session')
+var bodyParser = require('body-parser');
 const passport = require('passport');
 
 require('./routes/user/passport');
@@ -15,13 +15,12 @@ var meRouter = require('./routes/user/me');
 
 var app = express();
 
-const secret_key = '`Mb6XB=9{n9RZjh*';
-
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
-app.use(session({ secret: secret_key }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
