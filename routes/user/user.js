@@ -15,14 +15,17 @@ router.post('/login', passport.authenticate('local', { session: false }), functi
 router.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/login-google/callback',
     passport.authenticate('google', {
-        successRedirect: '/profile',
-        failureRedirect: '/'
-    }, function onAuthenticate(req, res) {
-        console.log(req);
-        // Successful authentication, redirect home
-        res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
+        successRedirect: '/user/login-google/success',
+        failureRedirect: '/user/login-google/failed'
     })
 );
+router.get('/login-google/success', passport.authenticate('local', { session: false }), function (req, res, next) {
+    res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
+});
+router.get('/login-google/failed', passport.authenticate('local', { session: false }), function (req, res, next) {
+    res.status(401).json({ message: "Login with google fail" });
+});
+
 
 router.post('/register', function (req, res, next) {
     const body = req.body;
