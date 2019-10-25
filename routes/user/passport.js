@@ -61,7 +61,9 @@ passport.use(new GoogleStrategy({
                     return done(null, user[0]);
                 } else {
                     const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'google', googleId: profile.id };
+                    console.log(newUser)
                     UserModel.add(newUser).then((index) => {
+                        console.log("OKKKKKKKKKKKKK", newUser)
                         return done(null, newUser);
                     }).catch((err) => {
                         console.log(err);

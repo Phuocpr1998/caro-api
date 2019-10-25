@@ -19,13 +19,12 @@ router.get('/login-google/callback',
         failureRedirect: '/user/login-google/failed'
     })
 );
-router.get('/login-google/success', passport.authenticate('local', { session: false }), function (req, res, next) {
+router.get('/login-google/success', function (req, res, next) {
     res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
-router.get('/login-google/failed', passport.authenticate('local', { session: false }), function (req, res, next) {
+router.get('/login-google/failed', function (req, res, next) {
     res.status(401).json({ message: "Login with google fail" });
 });
-
 
 router.post('/register', function (req, res, next) {
     const body = req.body;
