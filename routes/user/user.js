@@ -12,7 +12,7 @@ router.post('/login', passport.authenticate('local', { session: false }), functi
     res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
 
-router.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/login-google', passport.authenticate('google', {  session: false, scope: ['profile', 'email'] }));
 router.get('/login-google/callback',
     passport.authenticate('google', {
         successRedirect: '/user/login-google/success',
