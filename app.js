@@ -4,9 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-
-
+var session = require('express-session')
 const passport = require('passport');
+
 require('./routes/user/passport');
 
 const userRouter = require('./routes/user/user');
@@ -19,7 +19,7 @@ const secret_key = '`Mb6XB=9{n9RZjh*';
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
-app.use(express.session({ secret: secret_key }));
+app.use(session({ secret: secret_key }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
