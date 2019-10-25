@@ -15,12 +15,13 @@ router.post('/login', passport.authenticate('local', { session: false }), functi
 router.get('/login-google', passport.authenticate('google', {  session: false, scope: ['profile', 'email'] }));
 router.get('/login-google/callback',
     passport.authenticate('google', {
+        session: false,
         successRedirect: '/user/login-google/success',
         failureRedirect: '/user/login-google/failed'
     })
 );
 router.get('/login-google/success', function (req, res, next) {
-    console.log(req);
+    console.log(req.user);
     res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
 router.get('/login-google/failed', function (req, res, next) {
