@@ -12,8 +12,8 @@ router.post('/login', passport.authenticate('local', { session: false }), functi
     res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
 
-app.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/login-google/callback',
+router.get('/login-google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+router.get('/login-google/callback',
     passport.authenticate('google', {
         successRedirect: '/profile',
         failureRedirect: '/'
