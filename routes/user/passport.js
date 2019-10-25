@@ -56,13 +56,9 @@ passport.use(new GoogleStrategy({
     function (token, refreshToken, profile, done) {
         process.nextTick(function () {
             UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
-                console.log({ 'email': profile.emails[0].value })
-                if (err)
-                    return done(err);
-
-                if (user) {
-                    return done(null, user);
-
+                console.log(user)
+                if (user && user.length >= 0) {
+                    return done(null, user[0]);
                 } else {
                     const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'google', googleId: profile.id };
                     UserModel.add(newUser).then((index) => {
@@ -72,7 +68,9 @@ passport.use(new GoogleStrategy({
                         return done(err);
                     });
                 }
-            })
+            }).catch(err => {
+                return done(err);
+            });
         });
 
     }));
