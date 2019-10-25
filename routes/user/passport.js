@@ -57,17 +57,14 @@ passport.use(new GoogleStrategy({
         process.nextTick(function () {
             UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
                 console.log(user)
-                if (user && user.length >= 0) {
-                    console.log(":||||||||||", user)
+                if (user && user.length > 0) {
                     return done(null, user[0]);
                 } else {
                     const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'google', googleId: profile.id };
                     console.log(newUser)
                     UserModel.add(newUser).then((index) => {
-                        console.log("OKKKKKKKKKKKKK", newUser)
                         return done(null, newUser);
                     }).catch((err) => {
-                        console.log("vklllllllll", newUser)
                         console.log(err);
                         return done(err);
                     });
