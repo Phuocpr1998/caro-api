@@ -93,14 +93,14 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
+    if (profile.emails === undefined || profile.length <= 0) {
+        return done("No have email");
+    }
     UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
         console.log(user)
         if (user && user.length > 0) {
             return done(null, user[0]);
         } else {
-            if (profile.emails === undefined || profile.length <= 0) {
-                return done("No have email");
-            }
             const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'facebook', facebookId: profile.id };
             console.log(newUser)
             UserModel.add(newUser).then((index) => {
