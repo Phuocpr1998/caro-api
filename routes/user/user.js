@@ -12,21 +12,19 @@ router.post('/login', passport.authenticate('local', { session: false }), functi
     res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
 });
 
-router.get('/login-google', passport.authenticate('google', {  session: true, scope: ['profile', 'email'] }));
+router.get('/login-google', passport.authenticate('google', {  session: false, scope: ['profile', 'email'] }));
 router.get('/login-google/callback',
     passport.authenticate('google', {
-        session: true,
-        successRedirect: '/user/login-google/success',
-        failureRedirect: '/user/login-google/failed'
-    })
+        session: false
+    }), function (req, res, next) {
+        console.log(req.user, req.err);
+        if (req.err) {
+            res.status(401).json({message: "Login with google fail"});
+        } else {
+            res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
+        }
+    }
 );
-router.get('/login-google/success', function (req, res, next) {
-    console.log(req.user);
-    res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
-});
-router.get('/login-google/failed', function (req, res, next) {
-    res.status(401).json({ message: "Login with google fail" });
-});
 
 router.post('/register', function (req, res, next) {
     const body = req.body;
