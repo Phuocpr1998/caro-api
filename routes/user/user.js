@@ -22,7 +22,7 @@ router.get('/login-google/callback',
             res.status(401).json({message: "Login with google fail"});
         } else {
             const token = jwt.sign(Object.assign({}, req.user), secret_key);
-            res.status(302).send(`${contains.FrontendHost}/social-auth/${token}`);
+            res.redirect(`${contains.FrontendHost}/social-auth/${token}`);
         }
     }
 );
@@ -36,7 +36,7 @@ router.get('/login-facebook/callback',
             res.status(401).json({message: "Login with facebook fail"});
         } else {
             const token = jwt.sign(Object.assign({}, req.user), secret_key);
-            res.status(302).send(`${contains.FrontendHost}/social-auth/${token}`);
+            res.redirect(`${contains.FrontendHost}/social-auth/${token}`);
         }
     }
 );
