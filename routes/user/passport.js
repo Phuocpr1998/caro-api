@@ -89,6 +89,7 @@ passport.use(new FacebookStrategy({
     clientID: configAuth.facebookAuth.clientID,
     clientSecret: configAuth.facebookAuth.clientSecret,
     callbackURL: configAuth.facebookAuth.callbackURL,
+    profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email']
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
