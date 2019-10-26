@@ -75,11 +75,11 @@ passport.use(new GoogleStrategy({
                         return done(null, newUser);
                     }).catch((err) => {
                         console.log(err);
-                        return done(err);
+                        return done(null, false);
                     });
                 }
             }).catch(err => {
-                return done(err);
+                return done(null, false);
             });
         });
     })
@@ -94,7 +94,7 @@ passport.use(new FacebookStrategy({
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
     if (profile.emails === undefined || profile.emails.length <= 0) {
-        return done("No have email");
+        return done(null, false);
     }
     UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
         console.log(user)
@@ -107,11 +107,11 @@ passport.use(new FacebookStrategy({
                 return done(null, newUser);
             }).catch((err) => {
                 console.log(err);
-                return done(err);
+                return done(null, false);
             });
         }
     }).catch(err => {
-        return done(err);
+        return done(null, false);
     });
   }
 ));

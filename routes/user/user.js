@@ -17,7 +17,7 @@ router.get('/login-google/callback',
     passport.authenticate('google', {
         session: false
     }), function (req, res, next) {
-        if (req.err) {
+        if (!req.user) {
             res.status(401).json({message: "Login with google fail"});
         } else {
             res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
@@ -30,7 +30,7 @@ router.get('/login-facebook/callback',
     passport.authenticate('facebook', {
         session: false
     }), function (req, res, next) {
-        if (req.err) {
+        if (!req.user) {
             res.status(401).json({message: "Login with facebook fail"});
         } else {
             res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
