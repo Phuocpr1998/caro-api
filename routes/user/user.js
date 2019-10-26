@@ -59,8 +59,7 @@ router.post('/register', function (req, res, next) {
                     'email': body.email,
                     'loginType': 'local'
                 }).then(user => {
-                    console.log(user);
-                    if (user && user.length > 0) {
+                    if (!user || user.length === 0) {
                         return res.status(400).send({
                             message: "Register fail.",
                             err: "User already exists."
