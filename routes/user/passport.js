@@ -98,6 +98,9 @@ passport.use(new FacebookStrategy({
         if (user && user.length > 0) {
             return done(null, user[0]);
         } else {
+            if (profile.emails === undefined || profile.length <= 0) {
+                return done("No have email");
+            }
             const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'facebook', facebookId: profile.id };
             console.log(newUser)
             UserModel.add(newUser).then((index) => {
