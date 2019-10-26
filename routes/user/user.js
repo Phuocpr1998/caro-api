@@ -17,7 +17,6 @@ router.get('/login-google/callback',
     passport.authenticate('google', {
         session: false
     }), function (req, res, next) {
-        console.log(req.user, req.err);
         if (req.err) {
             res.status(401).json({message: "Login with google fail"});
         } else {
