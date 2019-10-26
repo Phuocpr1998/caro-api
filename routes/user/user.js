@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UserModel = require('../../models/user.model');
+const contains = require('../../config/contains');
 
 const secret_key = '`Mb6XB=9{n9RZjh*';
 
@@ -20,7 +21,8 @@ router.get('/login-google/callback',
         if (!req.user) {
             res.status(401).json({message: "Login with google fail"});
         } else {
-            res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
+            const token = jwt.sign(Object.assign({}, req.user), secret_key);
+            res.status(302).send(`${contains.FrontendHost}/social-auth/${token}`);
         }
     }
 );
@@ -33,7 +35,8 @@ router.get('/login-facebook/callback',
         if (!req.user) {
             res.status(401).json({message: "Login with facebook fail"});
         } else {
-            res.json({ token: jwt.sign(Object.assign({}, req.user), secret_key) });
+            const token = jwt.sign(Object.assign({}, req.user), secret_key);
+            res.status(302).send(`${contains.FrontendHost}/social-auth/${token}`);
         }
     }
 );
