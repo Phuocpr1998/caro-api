@@ -1,7 +1,7 @@
 module.exports = {
     'facebookAuth': {
-        'clientID': '336556870495272',
-        'clientSecret': '040bd5714a34140855b166214a84ecde',
+        'clientID': '746985432393934',
+        'clientSecret': 'a4703f641342b50d051093dcb8a884dd',
         'callbackURL': 'https://caro-api-wnc.herokuapp.com/user/login-facebook/callback'
     },
     'googleAuth': {
