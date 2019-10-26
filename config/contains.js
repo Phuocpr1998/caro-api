@@ -1,3 +1,3 @@
 module.exports = {
-    FrontendHost: 'http://localhost:3000'
+    FrontendHost: 'https://caro-vn-nc-wnc.herokuapp.com'
 }
