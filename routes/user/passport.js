@@ -93,7 +93,7 @@ passport.use(new FacebookStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
     console.log(profile);
-    if (profile.emails === undefined || profile.length <= 0) {
+    if (profile.emails === undefined || profile.emails.length <= 0) {
         return done("No have email");
     }
     UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
