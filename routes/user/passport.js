@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const UserModel = require('../../models/user.model');
 const configAuth = require('../../config/auth');
 const passportJWT = require("passport-jwt");
@@ -83,3 +84,31 @@ passport.use(new GoogleStrategy({
         });
     })
 );
+
+passport.use(new FacebookStrategy({
+    clientID: configAuth.facebookAuth.clientID,
+    clientSecret: configAuth.facebookAuth.clientSecret,
+    callbackURL: configAuth.facebookAuth.callbackURL,
+  },
+  function(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    UserModel.findOneEmail({ 'email': profile.emails[0].value }).then(user => {
+        console.log(user)
+        if (user && user.length > 0) {
+            return done(null, user[0]);
+        } else {
+            const newUser = { email: profile.emails[0].value, photo: profile.photos[0].value, name: profile.displayName, loginType: 'facebook', facebookId: profile.id };
+            console.log(newUser)
+            UserModel.add(newUser).then((index) => {
+                return done(null, newUser);
+            }).catch((err) => {
+                console.log(err);
+                return done(err);
+            });
+        }
+    }).catch(err => {
+        return done(err);
+    });
+  }
+));
+
