@@ -29,8 +29,6 @@ module.exports = (socketIo) => {
       if (parner != undefined) {
         socketIo.to(parner).emit('message_typing', msg);
       }
-      //debug
-      socket.emit('message_typing', msg);
     });
   });
 };
