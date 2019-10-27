@@ -1,5 +1,5 @@
-const gameRooms = new Map();
-const players = [];
+let gameRooms = new Map();
+let players = [];
 
 module.exports = (socketIo) => {
   socketIo.on('connection', function (socket) {
