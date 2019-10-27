@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 const passport = require('passport');
 
 require('./routes/user/passport');
-require('./socket/socketserver');
 
 const userRouter = require('./routes/user/user');
 var indexRouter = require('./routes/index');
@@ -48,4 +47,11 @@ app.use(function(err, req, res, next) {
   res.send('error');
 });
 
-module.exports = app;
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+io.on('connection', function (socket) {
+    console.log('a user connected');
+});
+server.listen(process.env.PORT || 3000, function(){
+  console.log('server listening...');
+});
