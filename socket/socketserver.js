@@ -8,7 +8,7 @@ module.exports = (socketIo) => {
     socket.on('disconnect', function () {
       const partner = gameRooms.get(socket.id);
       if (partner != undefined) {
-        socketIo.to(partner).emit('disconnected');
+        socketIo.to(partner).emit('partner_disconnected');
         gameRooms.delete(socket.id);
         if (gameRooms.has(partner)) {
           gameRooms.delete(partner);
