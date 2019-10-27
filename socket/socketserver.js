@@ -9,6 +9,8 @@ module.exports = (socketIo) => {
       if (parner != undefined) {
         socketIo.to(parner).emit('disconnected');
       }
+      //debug
+      socket.emit('disconnected')
     });
     
     socket.on('message_chat', function (from, msg) {
@@ -17,6 +19,8 @@ module.exports = (socketIo) => {
       if (parner != undefined) {
         socketIo.to(parner).emit('message_chat', msg);
       }
+      //debug
+      socket.emit('message_chat', msg);
     });
 
     socket.on('message_typing', function (from, msg) {
@@ -25,6 +29,8 @@ module.exports = (socketIo) => {
       if (parner != undefined) {
         socketIo.to(parner).emit('message_typing', msg);
       }
+      //debug
+      socket.emit('message_chat', msg);
     });
   });
 };
