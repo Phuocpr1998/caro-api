@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 const passport = require('passport');
 
 require('./routes/user/passport');
+require('./socket/socketserver');
 
 const userRouter = require('./routes/user/user');
 var indexRouter = require('./routes/index');
