@@ -13,23 +13,67 @@ module.exports = (socketIo) => {
         if (gameRooms.has(partner)) {
           gameRooms.delete(partner);
         }
+      } else {
+        let isExits = false;
+        for (i = 0; i < players.length; i++) {
+          if (players[0].socketId === socket.id) {
+            isExits = true;
+            break;
+          }
+        }
+        if (isExits) {
+          players = players.filter(player => {
+            return player.socketId != socket.id;
+          });
+        }
       }
-    }); 
-    
+    });
+
     socket.on('find_room', function (user) {
       console.log('Received command find_room ', socket.id, ' user ', user);
-      if (gameRooms.has(socket.id)) { // already in a rooom
-        socket.emit('join_room', {error: "Already in a rooom"});
+      if (user === undefined || user === null) {
+        socket.emit('join_room', { error: "User is not found" });
       } else {
-        if (players.length != 0) {
-          const player = players.pop();
-          socket.emit('join_room', {player: player.user});
-          socketIo.to(player.socketId).emit('join_room', {player: user});
-          gameRooms.set(socket.id, player.socketId)
-          gameRooms.set(player.socketId, socket.id)
+        if (gameRooms.has(socket.id)) { // already in a rooom
+          socket.emit('join_room', { error: "Already in a room" });
         } else {
-          players.push({user, socketId: socket.id})
+          if (players.length != 0) {
+            let isExits = false;
+            for (i = 0; i < players.length; i++) {
+              if (players[0].user.email === user.email) {
+                isExits = true;
+                break;
+              }
+            }
+            if (isExits) { // already request find room
+              return socket.emit('join_room', { error: "Already request find room" });
+            }
+
+            const player = players.pop();
+            socket.emit('join_room', { player: player.user });
+            socketIo.to(player.socketId).emit('join_room', { player: user });
+            gameRooms.set(socket.id, player.socketId)
+            gameRooms.set(player.socketId, socket.id)
+          } else {
+            players.push({ user, socketId: socket.id })
+          }
         }
+      }
+    });
+
+    socket.on('find_room_failed', function () {
+      console.log('Received command find_room_failed ', socket.id);
+      let isExits = false;
+      for (i = 0; i < players.length; i++) {
+        if (players[0].socketId === socket.id) {
+          isExits = true;
+          break;
+        }
+      }
+      if (isExits) {
+        players = players.filter(player => {
+          return player.socketId != socket.id;
+        });
       }
     });
 
