@@ -30,7 +30,7 @@ module.exports = (socketIo) => {
         socketIo.to(parner).emit('message_typing', msg);
       }
       //debug
-      socket.emit('message_chat', msg);
+      socket.emit('message_typing', msg);
     });
   });
 };
