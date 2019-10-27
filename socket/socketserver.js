@@ -13,8 +13,8 @@ module.exports = (socketIo) => {
       socket.emit('disconnected')
     });
     
-    socket.on('message_chat', function (from, msg) {
-      console.log('Received message ', from, ' saying ', msg);
+    socket.on('message_chat', function (msg) {
+      console.log('Received message ', socket.id, ' saying ', msg);
       const parner = gameRooms.get(socket.id);
       if (parner != undefined) {
         socketIo.to(parner).emit('message_chat', msg);
@@ -23,12 +23,14 @@ module.exports = (socketIo) => {
       socket.emit('message_chat', msg);
     });
 
-    socket.on('message_typing', function (from, msg) {
-      console.log('Received message ', from, ' saying ', msg);
+    socket.on('message_typing', function () {
+      console.log('message_typing');
       const parner = gameRooms.get(socket.id);
       if (parner != undefined) {
-        socketIo.to(parner).emit('message_typing', msg);
+        socketIo.to(parner).emit('message_typing');
       }
+      //debug
+      socket.emit('message_typing');
     });
   });
 };
