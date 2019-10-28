@@ -1,6 +1,10 @@
 let gameRooms = new Map();
 let players = [];
 
+function getRandomInt() {
+  return Math.floor(Math.random() * 2) + 1;
+}
+
 module.exports = (socketIo) => {
   socketIo.on('connection', function (socket) {
     console.log('New connected ', socket.id);
@@ -50,8 +54,10 @@ module.exports = (socketIo) => {
             }
 
             const player = players.pop();
-            socket.emit('join_room', { player: player.user });
-            socketIo.to(player.socketId).emit('join_room', { player: user });
+            const xPlayer = getRandomInt();
+            const oPlayer = xPlayer === 1 ? 2 : 1;
+            socket.emit('join_room', { player: player.user, Xplayer: xPlayer });
+            socketIo.to(player.socketId).emit('join_room', { player: user, Xplayer: oPlayer });
             gameRooms.set(socket.id, player.socketId)
             gameRooms.set(player.socketId, socket.id)
           } else {
@@ -90,6 +96,14 @@ module.exports = (socketIo) => {
       const parner = gameRooms.get(socket.id);
       if (parner != undefined) {
         socketIo.to(parner).emit('message_typing');
+      }
+    });
+
+    socket.on('fight', function (msg) {
+      console.log('Received message ', socket.id, ' saying ', msg);
+      const parner = gameRooms.get(socket.id);
+      if (parner != undefined) {
+        socketIo.to(parner).emit('fight', msg);
       }
     });
   });
