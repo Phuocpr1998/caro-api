@@ -100,10 +100,34 @@ module.exports = (socketIo) => {
     });
 
     socket.on('fight', function (msg) {
-      console.log('Received message ', socket.id, ' saying ', msg);
+      console.log('Received fight ', socket.id, ' saying ', msg);
       const parner = gameRooms.get(socket.id);
       if (parner != undefined) {
         socketIo.to(parner).emit('fight', msg);
+      }
+    });
+
+    socket.on('give_up', function (msg) {
+      console.log('Received give_up ', socket.id, ' saying ', msg);
+      const parner = gameRooms.get(socket.id);
+      if (parner != undefined) {
+        socketIo.to(parner).emit('give_up', msg);
+      }
+    });
+
+    socket.on('give_up_accept', function (msg) {
+      console.log('Received give_up_accept ', socket.id, ' saying ', msg);
+      const parner = gameRooms.get(socket.id);
+      if (parner != undefined) {
+        socketIo.to(parner).emit('give_up_accept', msg);
+      }
+    });
+
+    socket.on('give_up_cancel', function (msg) {
+      console.log('Received give_up_cancel ', socket.id, ' saying ', msg);
+      const parner = gameRooms.get(socket.id);
+      if (parner != undefined) {
+        socketIo.to(parner).emit('give_up_cancel', msg);
       }
     });
   });
