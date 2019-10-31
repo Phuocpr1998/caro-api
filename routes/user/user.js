@@ -44,56 +44,56 @@ router.get('/login-facebook/callback',
 
 
 router.post('/register', function (req, res, next) {
-    const body = req.body;
     var form = new multiparty.Form();
     form.parse(req, function(err, fields, files) {
         // fields fields fields
-        console.log(fields);
-    });
-    if (body === undefined || body === null || Object.keys(body).length === 0) {
-        return res.status(400).send({ message: "Body must not empty." });
-    }
-    body.loginType = 'local';
-    UserModel.add(body).then((index) => {
-        return res.send({ message: "Register successful." })
-    }).catch((err) => {
-        var errMessage = err.sqlMessage;
-        var exists = err.code.includes("ER_DUP_ENTRY");
-        if (exists) {
-            UserModel.findOneEmailAndNotHaveLoginType(
-                {
-                    'email': body.email,
-                    'loginType': 'local'
-                }).then(user => {
-                    if (!user || user.length === 0) {
-                        return res.status(400).send({
-                            message: "Register fail.",
-                            err: "User already exists."
-                        })
-                    } else {
-                        UserModel.udpate(body).then((index) => {
-                            return res.send({ message: "Register successful." })
-                        }).catch((err) => {
-                            console.log(err);
+        const body = fields;
+        console.log(body.email[0]);
+        if (body === undefined || body === null || Object.keys(body).length === 0) {
+            return res.status(400).send({ message: "Body must not empty." });
+        }
+        body.loginType = 'local';
+        UserModel.add(body).then((index) => {
+            return res.send({ message: "Register successful." })
+        }).catch((err) => {
+            var errMessage = err.sqlMessage;
+            var exists = err.code.includes("ER_DUP_ENTRY");
+            if (exists) {
+                UserModel.findOneEmailAndNotHaveLoginType(
+                    {
+                        'email': body.email,
+                        'loginType': 'local'
+                    }).then(user => {
+                        if (!user || user.length === 0) {
                             return res.status(400).send({
                                 message: "Register fail.",
-                                err: errMessage
+                                err: "User already exists."
                             })
-                        });
-                    }
-                }).catch(err => {
-                    console.log(err);
-                    return res.status(400).send({
-                        message: "Register fail.",
-                        err: errMessage
-                    })
-                });
-        } else {
-            return res.status(400).send({
-                message: "Register fail.",
-                err: errMessage
-            })
-        }
+                        } else {
+                            UserModel.udpate(body).then((index) => {
+                                return res.send({ message: "Register successful." })
+                            }).catch((err) => {
+                                console.log(err);
+                                return res.status(400).send({
+                                    message: "Register fail.",
+                                    err: errMessage
+                                })
+                            });
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        return res.status(400).send({
+                            message: "Register fail.",
+                            err: errMessage
+                        })
+                    });
+            } else {
+                return res.status(400).send({
+                    message: "Register fail.",
+                    err: errMessage
+                })
+            }
+        });
     });
 });
 
