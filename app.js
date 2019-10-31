@@ -16,6 +16,7 @@ var meRouter = require('./routes/user/me');
 var app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({origin:true, credentials: true}));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -24,7 +25,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors({origin:true,credentials: true}));
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);

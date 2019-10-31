@@ -44,6 +44,7 @@ router.get('/login-facebook/callback',
 
 router.post('/register', function (req, res, next) {
     const body = req.body;
+    console.log(body);
     if (body === undefined || body === null || Object.keys(body).length === 0) {
         return res.status(400).send({ message: "Body must not empty." });
     }
