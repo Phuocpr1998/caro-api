@@ -74,7 +74,7 @@ router.post('/register', function (req, res, next) {
                             var exists = err.code.includes("ER_DUP_ENTRY");
                             if (exists) {
                                 UserModel.findOneEmailAndNotHaveLoginType(body.email, 'local')
-                                .then(user => {
+                                    .then(user => {
                                         if (!user || user.length === 0) {
                                             return res.send({
                                                 message: "Register fail.",
@@ -128,6 +128,79 @@ router.post('/register', function (req, res, next) {
             error: "photo not found"
         })
     }
+});
+
+router.post('/update-photo', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    if (req.files !== null && req.files.photo !== undefined && req.files.photo !== null) {
+        try {
+            let image = req.files.photo;
+            var imageName = new Date().getTime();
+            var pathFile = imageName.toString();
+
+            image.mv(pathFile, function (err) {
+                if (err) {
+                    console.log(err);
+                    return rep.json({
+                        error: err
+                    })
+                }
+                imgurUploader(fs.readFileSync(pathFile))
+                    .then((json) => {
+                        console.log(json.link);
+                        var url_image = json.link;
+                        body.email = req.user.email;
+                        body.photo = url_image;
+                        UserModel.udpate(body).then((index) => {
+                            return res.send({ message: "Update photo successful." })
+                        }).catch((err) => {
+                            console.log(err);
+                            return res.send({
+                                message: "Update photo fail.",
+                                err: errMessage
+                            })
+                        });
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        return res.status(400).json({
+                            message: "Update photo fail.",
+                            error: err
+                        })
+                    });
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.status(400).json({
+                message: "Update photo fail.",
+                error: err
+            })
+        }
+    } else {
+        return res.json({
+            message: "photo not found.",
+            error: "photo not found"
+        })
+    }
+});
+
+router.post('/update', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    const body = req.body;
+    delete body.password;
+    delete body.photo;
+    body.email = req.user.email;
+    if (body === undefined || body === null || Object.keys(body).length === 0) {
+        return res.status(400).send({ message: "Body must not empty." });
+    }
+    UserModel.udpate(body).then((index) => {
+        return res.send({ message: "Update successful." })
+    }).catch((err) => {
+        console.log(err);
+        return res.send({
+            message: "Update fail.",
+            err: errMessage
+        })
+    });
 });
 
 module.exports = router;
