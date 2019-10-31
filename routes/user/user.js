@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UserModel = require('../../models/user.model');
 const contains = require('../../config/contains');
+const multiparty = require('multiparty');
 
 const secret_key = '`Mb6XB=9{n9RZjh*';
 
@@ -44,7 +45,11 @@ router.get('/login-facebook/callback',
 
 router.post('/register', function (req, res, next) {
     const body = req.body;
-    console.log(body);
+    var form = new multiparty.Form();
+    form.parse(req, function(err, fields, files) {
+        // fields fields fields
+        console.log(fields);
+    });
     if (body === undefined || body === null || Object.keys(body).length === 0) {
         return res.status(400).send({ message: "Body must not empty." });
     }
