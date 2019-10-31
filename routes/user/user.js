@@ -73,13 +73,10 @@ router.post('/register', function (req, res, next) {
                             var errMessage = err.sqlMessage;
                             var exists = err.code.includes("ER_DUP_ENTRY");
                             if (exists) {
-                                UserModel.findOneEmailAndNotHaveLoginType(
-                                    {
-                                        'email': body.email,
-                                        'loginType': 'local'
-                                    }).then(user => {
+                                UserModel.findOneEmailAndNotHaveLoginType(body.email, 'local')
+                                .then(user => {
                                         if (!user || user.length === 0) {
-                                            return res.status(400).send({
+                                            return res.send({
                                                 message: "Register fail.",
                                                 err: "User already exists."
                                             })
@@ -88,7 +85,7 @@ router.post('/register', function (req, res, next) {
                                                 return res.send({ message: "Register successful." })
                                             }).catch((err) => {
                                                 console.log(err);
-                                                return res.status(400).send({
+                                                return res.send({
                                                     message: "Register fail.",
                                                     err: errMessage
                                                 })
@@ -96,13 +93,13 @@ router.post('/register', function (req, res, next) {
                                         }
                                     }).catch(err => {
                                         console.log(err);
-                                        return res.status(400).send({
+                                        return res.send({
                                             message: "Register fail.",
                                             err: errMessage
                                         })
                                     });
                             } else {
-                                return res.status(400).send({
+                                return res.send({
                                     message: "Register fail.",
                                     err: errMessage
                                 })
@@ -126,7 +123,7 @@ router.post('/register', function (req, res, next) {
             })
         }
     } else {
-        return res.status(400).json({
+        return res.json({
             message: "photo not found.",
             error: "photo not found"
         })
