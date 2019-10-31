@@ -23,6 +23,9 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
+app.use(fileUpload({
+  createParentPath: true,
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -30,9 +33,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors());
 app.use(allowCrossDomain);
-app.use(fileUpload({
-  createParentPath: true,
-}));
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
@@ -59,6 +59,6 @@ var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 require('./socket/socketserver')(io)
 
-server.listen(process.env.PORT || 3000, function(){
+server.listen(process.env.PORT || 9000, function(){
   console.log('server listening...');
 });

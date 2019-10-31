@@ -4,7 +4,8 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UserModel = require('../../models/user.model');
 const contains = require('../../config/contains');
-const multiparty = require('multiparty');
+const imgurUploader = require('imgur-uploader');
+const fs = require('fs');
 
 const secret_key = '`Mb6XB=9{n9RZjh*';
 
@@ -42,55 +43,94 @@ router.get('/login-facebook/callback',
     }
 );
 
-
 router.post('/register', function (req, res, next) {
     const body = req.body;
-    console.log(body.email);
     if (body === undefined || body === null || Object.keys(body).length === 0) {
         return res.status(400).send({ message: "Body must not empty." });
     }
-    body.loginType = 'local';
-    UserModel.add(body).then((index) => {
-        return res.send({ message: "Register successful." })
-    }).catch((err) => {
-        var errMessage = err.sqlMessage;
-        var exists = err.code.includes("ER_DUP_ENTRY");
-        if (exists) {
-            UserModel.findOneEmailAndNotHaveLoginType(
-                {
-                    'email': body.email,
-                    'loginType': 'local'
-                }).then(user => {
-                    if (!user || user.length === 0) {
-                        return res.status(400).send({
-                            message: "Register fail.",
-                            err: "User already exists."
-                        })
-                    } else {
-                        UserModel.udpate(body).then((index) => {
+    if (req.files !== null && req.files.photo !== undefined && req.files.photo !== null) {
+        try {
+            let image = req.files.photo;
+            var imageName = new Date().getTime();
+            var pathFile = imageName.toString();
+
+            image.mv(pathFile, function (err) {
+                if (err) {
+                    console.log(err);
+                    return rep.json({
+                        error: err
+                    })
+                }
+                imgurUploader(fs.readFileSync(pathFile))
+                    .then((json) => {
+                        console.log(json.link);
+                        var url_image = json.link;
+                        body.loginType = 'local';
+                        body.photo = url_image;
+                        UserModel.add(body).then((index) => {
                             return res.send({ message: "Register successful." })
                         }).catch((err) => {
-                            console.log(err);
-                            return res.status(400).send({
-                                message: "Register fail.",
-                                err: errMessage
-                            })
+                            var errMessage = err.sqlMessage;
+                            var exists = err.code.includes("ER_DUP_ENTRY");
+                            if (exists) {
+                                UserModel.findOneEmailAndNotHaveLoginType(
+                                    {
+                                        'email': body.email,
+                                        'loginType': 'local'
+                                    }).then(user => {
+                                        if (!user || user.length === 0) {
+                                            return res.status(400).send({
+                                                message: "Register fail.",
+                                                err: "User already exists."
+                                            })
+                                        } else {
+                                            UserModel.udpate(body).then((index) => {
+                                                return res.send({ message: "Register successful." })
+                                            }).catch((err) => {
+                                                console.log(err);
+                                                return res.status(400).send({
+                                                    message: "Register fail.",
+                                                    err: errMessage
+                                                })
+                                            });
+                                        }
+                                    }).catch(err => {
+                                        console.log(err);
+                                        return res.status(400).send({
+                                            message: "Register fail.",
+                                            err: errMessage
+                                        })
+                                    });
+                            } else {
+                                return res.status(400).send({
+                                    message: "Register fail.",
+                                    err: errMessage
+                                })
+                            }
                         });
-                    }
-                }).catch(err => {
-                    console.log(err);
-                    return res.status(400).send({
-                        message: "Register fail.",
-                        err: errMessage
                     })
-                });
-        } else {
-            return res.status(400).send({
+                    .catch(function (err) {
+                        console.error(err);
+                        return res.status(400).json({
+                            message: "Register fail.",
+                            error: err
+                        })
+                    });
+            });
+        }
+        catch (err) {
+            console.log(err);
+            return res.status(400).json({
                 message: "Register fail.",
-                err: errMessage
+                error: err
             })
         }
-    });
+    } else {
+        return res.status(400).json({
+            message: "photo not found.",
+            error: "photo not found"
+        })
+    }
 });
 
 module.exports = router;
