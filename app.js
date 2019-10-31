@@ -14,6 +14,14 @@ var meRouter = require('./routes/user/me');
 
 var app = express();
 
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+
+  next();
+}
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +33,7 @@ app.use(fileUpload({
   createParentPath: true,
 }));
 app.use(cors({origin:true,credentials: true}));
+app.use(allowCrossDomain);
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
