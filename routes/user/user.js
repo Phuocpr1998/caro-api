@@ -44,11 +44,12 @@ router.get('/login-facebook/callback',
 
 
 router.post('/register', function (req, res, next) {
+    console.log(req.body);
     var form = new multiparty.Form();
     form.parse(req, function(err, fields, files) {
         // fields fields fields
         const body = fields;
-        console.log(body.email[0]);
+        console.log(body.email);
         if (body === undefined || body === null || Object.keys(body).length === 0) {
             return res.status(400).send({ message: "Body must not empty." });
         }
