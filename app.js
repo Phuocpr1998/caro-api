@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var bodyParser = require('body-parser');
 const passport = require('passport');
 
 require('./routes/user/passport');
@@ -17,14 +16,12 @@ var app = express();
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(logger('dev'));
-app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors({origin:true,credentials: true}));
+app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/user', userRouter);
