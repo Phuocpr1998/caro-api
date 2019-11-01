@@ -57,7 +57,7 @@ app.use(function(err, req, res, next) {
 
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
-require('./socket/socketserver')(io)
+require('./socket/socketserver').setupSocket(io)
 
 server.listen(process.env.PORT || 9000, function(){
   console.log('server listening...');

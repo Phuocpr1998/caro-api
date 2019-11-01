@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const UserModel = require('../../models/user.model');
 const contains = require('../../config/contains');
+const sokcetProcess = require('../../socket/socketserver');
 const imgurUploader = require('imgur-uploader');
 const fs = require('fs');
 
@@ -208,18 +209,27 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
 
 router.post('/update-point', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     const body = req.body;
-    if (body === undefined || body === null || Object.keys(body).length === 0) {
+    if (body === undefined || body === null 
+        || body.point === undefined || body.point === null 
+        || body.socketID === undefined || body.socketID === null) {
         return res.status(400).send({ message: "Body must not empty." });
     }
-    UserModel.udpate({email: req.user.email, point: body.point}).then((index) => {
-        return res.send({ message: "Update successful." })
-    }).catch((err) => {
-        console.log(err);
+    if (sokcetProcess.checkWinner(body.socketID)) {
+        UserModel.udpate({email: req.user.email, point: body.point}).then((index) => {
+            return res.send({ message: "Update successful." })
+        }).catch((err) => {
+            console.log(err);
+            return res.send({
+                message: "Update point fail.",
+                err: errMessage
+            })
+        });
+    } else {
         return res.send({
-            message: "Update fail.",
+            message: "Update point fail. Match not found.",
             err: errMessage
         })
-    });
+    }
 });
 
 router.post('/update-password', passport.authenticate('jwt', { session: false }), function (req, res, next) {
