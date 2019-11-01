@@ -201,7 +201,7 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
         console.log(err);
         return res.send({
             message: "Update fail.",
-            err: errMessage
+            err: err.message
         })
     });
 });
