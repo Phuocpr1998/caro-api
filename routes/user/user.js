@@ -222,5 +222,22 @@ router.post('/update-point', passport.authenticate('jwt', { session: false }), f
     });
 });
 
+router.post('/update-password', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    const body = req.body;
+    if (body === undefined || body === null || body.password === undefined || body.password === null) {
+        return res.status(400).send({ message: "Body must not empty." });
+    }
+    UserModel.udpate({email: req.user.email, password: body.password}).then((index) => {
+        return res.send({ message: "Update successful." })
+    }).catch((err) => {
+        console.log(err);
+        return res.send({
+            message: "Update fail.",
+            err: err.message
+        })
+    });
+});
+
+
 
 module.exports = router;
