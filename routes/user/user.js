@@ -210,7 +210,6 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
 router.post('/update-point', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     const body = req.body;
     if (body === undefined || body === null
-        || body.point === undefined || body.point === null
         || body.socketID === undefined || body.socketID === null) {
         return res.status(400).send({ message: "Body must not empty." });
     }
