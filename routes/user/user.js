@@ -148,6 +148,7 @@ router.post('/update-photo', passport.authenticate('jwt', { session: false }), f
                     .then((json) => {
                         console.log(json.link);
                         var url_image = json.link;
+                        const body = {}
                         body.email = req.user.email;
                         body.photo = url_image;
                         UserModel.udpate(body).then((index) => {
@@ -186,12 +187,12 @@ router.post('/update-photo', passport.authenticate('jwt', { session: false }), f
 
 router.post('/update', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     const body = req.body;
-    delete body.password;
-    delete body.photo;
-    body.email = req.user.email;
     if (body === undefined || body === null || Object.keys(body).length === 0) {
         return res.status(400).send({ message: "Body must not empty." });
     }
+    delete body.password;
+    delete body.photo;
+    body.email = req.user.email;
     UserModel.udpate(body).then((index) => {
         return res.send({ message: "Update successful." })
     }).catch((err) => {
