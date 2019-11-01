@@ -22,7 +22,7 @@ module.exports = {
         } else {
           let isExits = false;
           for (i = 0; i < players.length; i++) {
-            if (players[0].socketId === socket.id) {
+            if (players[i].socketId === socket.id) {
               isExits = true;
               break;
             }
@@ -46,7 +46,7 @@ module.exports = {
             if (players.length != 0) {
               let isExits = false;
               for (i = 0; i < players.length; i++) {
-                if (players[0].user.email === user.email) {
+                if (players[i].user.email === user.email) {
                   isExits = true;
                   break;
                 }
@@ -73,7 +73,7 @@ module.exports = {
         console.log('Received command find_room_failed ', socket.id);
         let isExits = false;
         for (i = 0; i < players.length; i++) {
-          if (players[0].socketId === socket.id) {
+          if (players[i].socketId === socket.id) {
             isExits = true;
             break;
           }
@@ -146,7 +146,7 @@ module.exports = {
   checkWinner: (socketID) => {
     let isExits = false;
     for (i = 0; i < loserPlayers.length; i++) {
-      if (loserPlayers[0].socketId === socketID) {
+      if (loserPlayers[i] === socketID) {
         isExits = true;
         break;
       }

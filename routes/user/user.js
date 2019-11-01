@@ -159,7 +159,7 @@ router.post('/update-photo', passport.authenticate('jwt', { session: false }), f
                             console.log(err);
                             return res.send({
                                 message: "Update photo fail.",
-                                err: errMessage
+                                err: err.message
                             })
                         });
                     })
@@ -228,7 +228,7 @@ router.post('/update-point', passport.authenticate('jwt', { session: false }), f
                         console.log(err);
                         return res.send({
                             message: "Update point fail.",
-                            err: errMessage
+                            err: err.message
                         })
                     });
                 }
@@ -236,13 +236,13 @@ router.post('/update-point', passport.authenticate('jwt', { session: false }), f
                 console.log(err);
                 return res.send({
                     message: "Update point fail.",
-                    err: errMessage
+                    err: err.message
                 })
             });
     } else {
         return res.send({
             message: "Update point fail. Match not found.",
-            err: errMessage
+            err: err.message
         })
     }
 });
