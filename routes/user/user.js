@@ -209,21 +209,37 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
 
 router.post('/update-point', passport.authenticate('jwt', { session: false }), function (req, res, next) {
     const body = req.body;
-    if (body === undefined || body === null 
-        || body.point === undefined || body.point === null 
+    if (body === undefined || body === null
+        || body.point === undefined || body.point === null
         || body.socketID === undefined || body.socketID === null) {
         return res.status(400).send({ message: "Body must not empty." });
     }
     if (sokcetProcess.checkWinner(body.socketID)) {
-        UserModel.udpate({email: req.user.email, point: body.point}).then((index) => {
-            return res.send({ message: "Update successful." })
-        }).catch((err) => {
-            console.log(err);
-            return res.send({
-                message: "Update point fail.",
-                err: errMessage
-            })
-        });
+        UserModel.findOneEmail(req.user.email)
+            .then(user => {
+                if (!user || user.length === 0) {
+                    return res.send({
+                        message: "Update point fail.",
+                        err: "User not found."
+                    })
+                } else {
+                    UserModel.udpate({ email: req.user.email, point: user[0].point + 1 }).then((index) => {
+                        return res.send({ message: "Update successful." })
+                    }).catch((err) => {
+                        console.log(err);
+                        return res.send({
+                            message: "Update point fail.",
+                            err: errMessage
+                        })
+                    });
+                }
+            }).catch(err => {
+                console.log(err);
+                return res.send({
+                    message: "Update point fail.",
+                    err: errMessage
+                })
+            });
     } else {
         return res.send({
             message: "Update point fail. Match not found.",
@@ -237,7 +253,7 @@ router.post('/update-password', passport.authenticate('jwt', { session: false })
     if (body === undefined || body === null || body.password === undefined || body.password === null) {
         return res.status(400).send({ message: "Body must not empty." });
     }
-    UserModel.udpate({email: req.user.email, password: body.password}).then((index) => {
+    UserModel.udpate({ email: req.user.email, password: body.password }).then((index) => {
         return res.send({ message: "Update successful." })
     }).catch((err) => {
         console.log(err);
