@@ -67,6 +67,7 @@ router.post('/register', function (req, res, next) {
                         var url_image = json.link;
                         body.loginType = 'local';
                         body.photo = url_image;
+                        delete body.point;
                         UserModel.add(body).then((index) => {
                             return res.send({ message: "Register successful." })
                         }).catch((err) => {
@@ -192,6 +193,7 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
     }
     delete body.password;
     delete body.photo;
+    delete body.point;
     body.email = req.user.email;
     UserModel.udpate(body).then((index) => {
         return res.send({ message: "Update successful." })
@@ -203,5 +205,22 @@ router.post('/update', passport.authenticate('jwt', { session: false }), functio
         })
     });
 });
+
+router.post('/update-point', passport.authenticate('jwt', { session: false }), function (req, res, next) {
+    const body = req.body;
+    if (body === undefined || body === null || Object.keys(body).length === 0) {
+        return res.status(400).send({ message: "Body must not empty." });
+    }
+    UserModel.udpate({email: req.user.email, point: body.point}).then((index) => {
+        return res.send({ message: "Update successful." })
+    }).catch((err) => {
+        console.log(err);
+        return res.send({
+            message: "Update fail.",
+            err: errMessage
+        })
+    });
+});
+
 
 module.exports = router;
