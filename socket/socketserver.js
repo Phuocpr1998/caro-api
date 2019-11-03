@@ -142,6 +142,14 @@ module.exports = {
         }
       });
 
+      socket.on('give_up_timeout', function (msg) {
+        console.log('Received give_up_timeout ', socket.id, ' saying ', msg);
+        const parner = gameRooms.get(socket.id);
+        if (parner != undefined) {
+          socketIo.to(parner).emit('give_up_timeout', msg);
+        }
+      });
+
       socket.on('reconcile', function (msg) {
         console.log('Received reconcile ', socket.id, ' saying ', msg);
         const parner = gameRooms.get(socket.id);
@@ -166,6 +174,13 @@ module.exports = {
         }
       });
 
+      socket.on('reconcile_timeout', function (msg) {
+        console.log('Received reconcile_timeout ', socket.id, ' saying ', msg);
+        const parner = gameRooms.get(socket.id);
+        if (parner != undefined) {
+          socketIo.to(parner).emit('reconcile_timeout', msg);
+        }
+      });
     });
   },
   checkWinner: (socketID) => {
