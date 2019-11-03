@@ -216,6 +216,7 @@ router.post('/update-point', passport.authenticate('jwt', { session: false }), f
     if (sokcetProcess.checkWinner(body.socketID)) {
         UserModel.findOneEmail(req.user.email)
             .then(user => {
+                console.log(user);
                 if (!user || user.length === 0) {
                     return res.send({
                         message: "Update point fail.",
