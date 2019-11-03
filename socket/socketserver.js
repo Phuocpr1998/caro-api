@@ -141,6 +141,31 @@ module.exports = {
           socketIo.to(parner).emit('give_up_cancel', msg);
         }
       });
+
+      socket.on('reconcile', function (msg) {
+        console.log('Received reconcile ', socket.id, ' saying ', msg);
+        const parner = gameRooms.get(socket.id);
+        if (parner != undefined) {
+          socketIo.to(parner).emit('reconcile', msg);
+        }
+      });
+
+      socket.on('reconcile_accept', function (msg) {
+        console.log('Received reconcile_accept ', socket.id, ' saying ', msg);
+        const parner = gameRooms.get(socket.id);
+        if (parner != undefined) {
+          socketIo.to(parner).emit('reconcile_accept', msg);
+        }
+      });
+
+      socket.on('reconcile_cancel', function (msg) {
+        console.log('Received reconcile_cancel ', socket.id, ' saying ', msg);
+        const parner = gameRooms.get(socket.id);
+        if (parner != undefined) {
+          socketIo.to(parner).emit('reconcile_cancel', msg);
+        }
+      });
+
     });
   },
   checkWinner: (socketID) => {
