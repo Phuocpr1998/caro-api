@@ -1,13 +1,13 @@
-const contains = require('./contains');
+const hostUrl = 'https://caro-api-wnc.herokuapp.com';
 module.exports = {
     'facebookAuth': {
         'clientID': '746985432393934',
         'clientSecret': 'a4703f641342b50d051093dcb8a884dd',
-        'callbackURL': `${contains.FrontendHost}/user/login-facebook/callback`
+        'callbackURL': `${hostUrl}/user/login-facebook/callback`
     },
     'googleAuth': {
         'clientID': '1001676497241-vn4rjm0l9cg75l4301iuflfu1avu9l44.apps.googleusercontent.com',
         'clientSecret': 'i9TWeJu1FRBvK0wHcIW9acA7',
-        'callbackURL': `${contains.FrontendHost}/user/login-google/callback`
+        'callbackURL': `${hostUrl}/user/login-google/callback`
     }
 };
